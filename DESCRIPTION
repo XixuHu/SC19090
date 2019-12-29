@@ -1,0 +1,17 @@
+Package: SC19090
+Type: Package
+Title: Statistical Computing Final Project, 2019 FALL, USTC
+Version: 1.0
+Date: 2019-12-27
+Author: Xixu Hu
+Maintainer: Xixu Hu <xixuhu1998@gmail.com>
+Description: This package includes functions which are the extended version of jonckheere.test  function in clinfun package and nonparametric ways to solve for confidence interval.It also include all the homework answers of "Statistical Computing with R" for the course.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.3), clinfun, knitr
+LinkingTo: Rcpp
+RoxygenNote: 7.0.2
+Encoding: UTF-8
+VignetteBuilder: knitr
+Suggests: knitr, rmarkdown
+URL: https://github.com/XixuHu/SC19090
+BugReports: https://github.com/XixuHu/SC19090/issues
