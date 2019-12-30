@@ -7,7 +7,7 @@ Author: Xixu Hu
 Maintainer: Xixu Hu <xixuhu1998@gmail.com>
 Description: This package includes functions which are the extended version of jonckheere.test  function in clinfun package and nonparametric ways to solve for confidence interval.It also include all the homework answers of "Statistical Computing with R" for the course.
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.3), clinfun, knitr, microbenchmark, lattice, boot, bootstrap, dplyr, rmutil, DAAG
+Imports: Rcpp (>= 1.0.3), clinfun,  microbenchmark, lattice, boot, bootstrap, dplyr, rmutil, DAAG, graphics, stats
 LinkingTo: Rcpp
 RoxygenNote: 7.0.2
 Encoding: UTF-8

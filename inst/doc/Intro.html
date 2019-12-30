@@ -112,6 +112,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#homework-5-11.1">Homework-5 11.1</a></li>
 <li><a href="#homework-6-11.8">Homework-6 11.8</a></li>
 <li><a href="#homework-7-11.15">Homework-7 11.15</a></li>
+<li><a href="#homework-8-11.22">Homework-8 11.22</a></li>
 <li><a href="#homework-9-11.29">Homework-9 11.29</a></li>
 <li><a href="#homework-10-12.6">Homework-10 12.6</a></li>
 <li><a href="#homework-11-12.13">Homework-11 12.13</a></li>
@@ -899,154 +900,160 @@ L4 =<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</sp
 coef=<span class="kw">round</span>(L2<span class="op">$</span>coef,<span class="dv">3</span>)
 <span class="kw">paste</span>(<span class="st">&quot;Magnetic =&quot;</span>,coef[<span class="dv">1</span>],coef[<span class="dv">2</span>],<span class="st">&quot;*Chemical +&quot;</span> ,coef[<span class="dv">3</span>],<span class="st">&quot;*Chemical^2&quot;</span>)</code></pre></div>
 <pre><code># [1] &quot;Magnetic = 24.493 -1.393 *Chemical + 0.055 *Chemical^2&quot;</code></pre>
-<!-- ### Homework-8 11.22 -->
-<!-- ####8.3 Implement a permutation test for equal variance based on the maximum number of extreme points that applies when sample sizes are not necessarily equal.     -->
-<!-- We use *function count5num* to compute the maximum number of extreme points, then we use *function count5_test* to do the permutation and compute p value. We reject null hypothesis if the permutation number larger than observed number of extreme points.   -->
-<!-- ```{r} -->
-<!-- library(boot,quietly = TRUE) -->
-<!-- count5num <- function(z,ix,n1) { -->
-<!--  z = z[ix] -->
-<!--  x = z[1:n1] -->
-<!--  y = z[-(1:n1)] -->
-<!--  X <- x - mean(x) -->
-<!--  Y <- y - mean(y) -->
-<!--  outx <- sum(X > max(Y)) + sum(X < min(Y)) -->
-<!--  outy <- sum(Y > max(X)) + sum(Y < min(X)) -->
-<!--  # return the number of extreme points -->
-<!--  return(max(c(outx, outy))) -->
-<!-- } -->
-<!-- count5_test =function(y,n1){ #Permutation version -->
-<!--  boot.obj = boot(data = y, statistic = count5num -->
-<!--  ,R = 2000,sim = "permutation",n1=n1) -->
-<!--  tb = c(boot.obj$t0, boot.obj$t) -->
-<!--  p.value = mean(tb>=tb[1]) #larger t favors alternative -->
-<!--  return(as.integer(p.value<0.05)) -->
-<!-- } -->
-<!-- count5test = function(x, y) { -->
-<!--  X = x - mean(x) -->
-<!--  Y = y - mean(y) -->
-<!--  outx = sum(X > max(Y)) + sum(X < min(Y)) -->
-<!--  outy = sum(Y > max(X)) + sum(Y < min(X)) -->
-<!--  # return 1 (reject) or 0 (do not reject H0) -->
-<!--  return(as.integer(max(c(outx, outy)) > 5)) -->
-<!-- } -->
-<!-- n1=20;n2=30;m=500 -->
-<!-- a1 = mean(replicate(m, expr={ #Count 5 criterion -->
-<!--  x = rnorm(n1);y <- rnorm(n2) -->
-<!--  x = x - mean(x) #centered by sample mean -->
-<!--  y = y - mean(y) -->
-<!--  count5test(x, y) -->
-<!-- })) -->
-<!-- a2 = mean(replicate(m, expr={ #Permutation test -->
-<!--  x1 = rnorm(n1);x2 = rnorm(n2) -->
-<!--  y=c(x1,x2) -->
-<!--  count5_test(y,n1) -->
-<!-- })) -->
-<!-- round(c(c5_t1e=a1,pt_t1e=a2),3) -->
-<!-- ``` -->
-<!-- When $n_1=20,n_2=30$, we can see that the empirical tyep-I error of permutation test is smaller than count-5 test when example sizes are different. Thus, using permutation test can better control type-I error than count 5 criterion.    -->
-<!-- ```{r} -->
-<!-- n2=50;m=500 -->
-<!-- a1 = mean(replicate(m, expr={ #Count 5 criterion -->
-<!--  x = rnorm(n1);y <- rnorm(n2) -->
-<!--  x = x - mean(x) #centered by sample mean -->
-<!--  y = y - mean(y) -->
-<!--  count5test(x, y) -->
-<!-- })) -->
-<!-- a2 = mean(replicate(m, expr={ #Permutation test -->
-<!--  x1 = rnorm(n1);x2 = rnorm(n2) -->
-<!--  y=c(x1,x2) -->
-<!--  count5_test(y,n1) -->
-<!-- })) -->
-<!-- round(c(c5_t1e=a1,pt_t1e=a2),3) -->
-<!-- ``` -->
-<!-- This also make sense when $n_2=50$, thus we can come to the conclusion that using permutation test can better control type-I error than count 5 criterion.   -->
-<!-- ####2. Power comparison (distance correlation test versus ball covariance test)  X ∼ $N(0_2, I_2)$, $e ∼ N(0_2, I_2)$, X and e are independent    -->
-<!-- ####Model 1: $Y = \frac{X}{4} + e$ -->
-<!-- ```{r} -->
-<!-- library(snowfall,quietly=TRUE) -->
-<!-- Akl = function(x) { -->
-<!--  d = as.matrix(dist(x)) -->
-<!--  m = rowMeans(d); M = mean(d) -->
-<!--  a = sweep(d, 1, m); b = sweep(a, 2, m) -->
-<!--  return(b+M) -->
-<!-- } -->
-<!-- dCov = function(x, y) { -->
-<!--  x = as.matrix(x); y = as.matrix(y) -->
-<!--  n = nrow(x); m = nrow(y) -->
-<!--  if (n != m || n < 2) stop("Sample sizes must agree") -->
-<!--  if (! (all(is.finite(c(x, y))))) -->
-<!--  stop("Data contains missing or infinite values") -->
-<!--  A = Akl(x); B = Akl(y) -->
-<!--  sqrt(mean(A * B)) -->
-<!-- } -->
-<!-- ndCov2 = function(z, ix, dims) { -->
-<!--  #dims contains dimensions of x and y -->
-<!--  p = dims[1] -->
-<!--  q = dims[2] -->
-<!--  d = p + q -->
-<!--  x = z[ , 1:p] #leave x as is -->
-<!--  y = z[ix, -(1:p)] #permute rows of y -->
-<!--  return(nrow(z) * dCov(x, y)^2) -->
-<!-- } -->
-<!-- dcov.test= function(z){ -->
-<!--  boot.obj = boot(data = z, statistic = ndCov2, R = 999, -->
-<!--  sim = "permutation", dims = c(2, 2)) -->
-<!--  tb = c(boot.obj$t0, boot.obj$t) -->
-<!--  return(p.cor = mean(tb>=tb[1])) -->
-<!-- } -->
-<!-- run_cop1 = function(n){ -->
-<!-- for (i in 1:10){ -->
-<!--  x = rmvnorm(n,mu=c(0,0),sigma=diag(1,2)) -->
-<!--  e = rmvnorm(n,mu=c(0,0),sigma=diag(1,2)) -->
-<!--  y = x/4+e -->
-<!--  z = cbind(x,y) -->
-<!--  p1.values[i,1] = dcov.test(z) -->
-<!--  p1.values[i,2] = bcov.test(z[,1:2],z[,3:4],R=999,seed=i+1)$p.value -->
-<!-- } -->
-<!--  return(colMeans(p1.values<0.1)) -->
-<!-- } -->
-<!-- p1.values=matrix(0,ncol=2,nrow=10) -->
-<!-- sfInit(parallel = TRUE, cpus = 10) -->
-<!-- sfLibrary(mixtools) -->
-<!-- sfLibrary(Ball) -->
-<!-- sfLibrary(boot) -->
-<!-- sfExport("Akl","dCov","ndCov2","dcov.test") -->
-<!-- sfExport("p1.values") -->
-<!-- n = seq(50,200,20) -->
-<!-- result1 = sfLapply(n, run_cop1)  #Model 1 -->
-<!-- result1=matrix(unlist(result1),ncol=2,byrow=T) -->
-<!-- plot(n,result1[,1],type="b",pch=20,ylab="Power",main="Model 1",ylim=c(0,1.1)) -->
-<!-- lines(n,result1[,2],type="b",lty=2) -->
-<!-- legend(140,0.3,c("Distance","Ball"),lty=1:2) -->
-<!-- t1=t(result1);colnames(t1)=as.character(n);rownames(t1)=c("Distance","Ball") -->
-<!-- knitr::kable(t1) -->
-<!-- ``` -->
-<!-- ####Model 2: $Y = \frac{X}{4} \cdot e$   -->
-<!-- ```{r} -->
-<!-- run_cop2 = function(n){ -->
-<!-- for (i in 1:10){ -->
-<!--  x = rmvnorm(n,mu=c(0,0),sigma=diag(1,2)) -->
-<!--  e = rmvnorm(n,mu=c(0,0),sigma=diag(1,2)) -->
-<!--  y = x/4*e -->
-<!--  z = cbind(x,y) -->
-<!--  p2.values[i,1] = dcov.test(z) -->
-<!--  p2.values[i,2] = bcov.test(z[,1:2],z[,3:4],R=999,seed=i+1)$p.value -->
-<!-- } -->
-<!--  return(colMeans(p2.values<0.1)) -->
-<!-- } -->
-<!-- p2.values=matrix(0,ncol=2,nrow=10) -->
-<!-- sfExport("p2.values") -->
-<!-- n = seq(50,200,20) -->
-<!-- result2 = sfLapply(n, run_cop2)  #Model 2 -->
-<!-- result2=matrix(unlist(result2),ncol=2,byrow=T) -->
-<!-- plot(n,result2[,1],type="b",pch=20,ylab="Power",main="Model 2",ylim=c(0,1.1)) -->
-<!-- lines(n,result2[,2],type="b",lty=2) -->
-<!-- legend(140,0.3,c("Distance","Ball"),lty=1:2) -->
-<!-- t2=t(result2);colnames(t2)=as.character(n);rownames(t2)=c("Distance","Ball") -->
-<!-- knitr::kable(t2) -->
-<!-- ``` -->
-<!-- From the curves and the tables, we can see that in Model 1, distance correlation test has larger power, but in Model 2, Ball covariance test has larger power. -->
+</div>
+</div>
+<div id="homework-8-11.22" class="section level3">
+<h3>Homework-8 11.22</h3>
+<div id="implement-a-permutation-test-for-equal-variance-based-on-the-maximum-number-of-extreme-points-that-applies-when-sample-sizes-are-not-necessarily-equal." class="section level4">
+<h4>8.3 Implement a permutation test for equal variance based on the maximum number of extreme points that applies when sample sizes are not necessarily equal.</h4>
+<p>We use <em>function count5num</em> to compute the maximum number of extreme points, then we use <em>function count5_test</em> to do the permutation and compute p value. We reject null hypothesis if the permutation number larger than observed number of extreme points.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(boot,<span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+count5num &lt;-<span class="st"> </span><span class="cf">function</span>(z,ix,n1) {
+ z =<span class="st"> </span>z[ix]
+ x =<span class="st"> </span>z[<span class="dv">1</span><span class="op">:</span>n1]
+ y =<span class="st"> </span>z[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span>n1)]
+ X &lt;-<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)
+ Y &lt;-<span class="st"> </span>y <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(y)
+ outx &lt;-<span class="st"> </span><span class="kw">sum</span>(X <span class="op">&gt;</span><span class="st"> </span><span class="kw">max</span>(Y)) <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(X <span class="op">&lt;</span><span class="st"> </span><span class="kw">min</span>(Y))
+ outy &lt;-<span class="st"> </span><span class="kw">sum</span>(Y <span class="op">&gt;</span><span class="st"> </span><span class="kw">max</span>(X)) <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(Y <span class="op">&lt;</span><span class="st"> </span><span class="kw">min</span>(X))
+ <span class="co"># return the number of extreme points</span>
+ <span class="kw">return</span>(<span class="kw">max</span>(<span class="kw">c</span>(outx, outy)))
+}
+count5_test =<span class="cf">function</span>(y,n1){ <span class="co">#Permutation version</span>
+ boot.obj =<span class="st"> </span><span class="kw">boot</span>(<span class="dt">data =</span> y, <span class="dt">statistic =</span> count5num
+ ,<span class="dt">R =</span> <span class="dv">2000</span>,<span class="dt">sim =</span> <span class="st">&quot;permutation&quot;</span>,<span class="dt">n1=</span>n1)
+ tb =<span class="st"> </span><span class="kw">c</span>(boot.obj<span class="op">$</span>t0, boot.obj<span class="op">$</span>t)
+ p.value =<span class="st"> </span><span class="kw">mean</span>(tb<span class="op">&gt;=</span>tb[<span class="dv">1</span>]) <span class="co">#larger t favors alternative</span>
+ <span class="kw">return</span>(<span class="kw">as.integer</span>(p.value<span class="op">&lt;</span><span class="fl">0.05</span>))
+}
+count5test =<span class="st"> </span><span class="cf">function</span>(x, y) {
+ X =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)
+ Y =<span class="st"> </span>y <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(y)
+ outx =<span class="st"> </span><span class="kw">sum</span>(X <span class="op">&gt;</span><span class="st"> </span><span class="kw">max</span>(Y)) <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(X <span class="op">&lt;</span><span class="st"> </span><span class="kw">min</span>(Y))
+ outy =<span class="st"> </span><span class="kw">sum</span>(Y <span class="op">&gt;</span><span class="st"> </span><span class="kw">max</span>(X)) <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(Y <span class="op">&lt;</span><span class="st"> </span><span class="kw">min</span>(X))
+ <span class="co"># return 1 (reject) or 0 (do not reject H0)</span>
+ <span class="kw">return</span>(<span class="kw">as.integer</span>(<span class="kw">max</span>(<span class="kw">c</span>(outx, outy)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>))
+}
+n1=<span class="dv">20</span>;n2=<span class="dv">30</span>;m=<span class="dv">500</span>
+a1 =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">replicate</span>(m, <span class="dt">expr=</span>{ <span class="co">#Count 5 criterion</span>
+ x =<span class="st"> </span><span class="kw">rnorm</span>(n1);y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n2)
+ x =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x) <span class="co">#centered by sample mean</span>
+ y =<span class="st"> </span>y <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(y)
+ <span class="kw">count5test</span>(x, y)
+}))
+a2 =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">replicate</span>(m, <span class="dt">expr=</span>{ <span class="co">#Permutation test</span>
+ x1 =<span class="st"> </span><span class="kw">rnorm</span>(n1);x2 =<span class="st"> </span><span class="kw">rnorm</span>(n2)
+ y=<span class="kw">c</span>(x1,x2)
+ <span class="kw">count5_test</span>(y,n1)
+}))
+<span class="kw">round</span>(<span class="kw">c</span>(<span class="dt">c5_t1e=</span>a1,<span class="dt">pt_t1e=</span>a2),<span class="dv">3</span>)</code></pre></div>
+<pre><code># c5_t1e pt_t1e 
+#  0.104  0.034</code></pre>
+<p>When <span class="math inline">\(n_1=20,n_2=30\)</span>, we can see that the empirical tyep-I error of permutation test is smaller than count-5 test when example sizes are different. Thus, using permutation test can better control type-I error than count 5 criterion.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n2=<span class="dv">50</span>;m=<span class="dv">500</span>
+a1 =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">replicate</span>(m, <span class="dt">expr=</span>{ <span class="co">#Count 5 criterion</span>
+ x =<span class="st"> </span><span class="kw">rnorm</span>(n1);y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n2)
+ x =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x) <span class="co">#centered by sample mean</span>
+ y =<span class="st"> </span>y <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(y)
+ <span class="kw">count5test</span>(x, y)
+}))
+a2 =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">replicate</span>(m, <span class="dt">expr=</span>{ <span class="co">#Permutation test</span>
+ x1 =<span class="st"> </span><span class="kw">rnorm</span>(n1);x2 =<span class="st"> </span><span class="kw">rnorm</span>(n2)
+ y=<span class="kw">c</span>(x1,x2)
+ <span class="kw">count5_test</span>(y,n1)
+}))
+<span class="kw">round</span>(<span class="kw">c</span>(<span class="dt">c5_t1e=</span>a1,<span class="dt">pt_t1e=</span>a2),<span class="dv">3</span>)</code></pre></div>
+<pre><code># c5_t1e pt_t1e 
+#  0.266  0.050</code></pre>
+<p>This also make sense when <span class="math inline">\(n_2=50\)</span>, thus we can come to the conclusion that using permutation test can better control type-I error than count 5 criterion.</p>
+</div>
+<div id="power-comparison-distance-correlation-test-versus-ball-covariance-test-x-n0_2-i_2-e-n0_2-i_2-x-and-e-are-independent" class="section level4">
+<h4>2. Power comparison (distance correlation test versus ball covariance test) X ∼ <span class="math inline">\(N(0_2, I_2)\)</span>, <span class="math inline">\(e ∼ N(0_2, I_2)\)</span>, X and e are independent</h4>
+</div>
+<div id="model-1-y-fracx4-e" class="section level4">
+<h4>Model 1: <span class="math inline">\(Y = \frac{X}{4} + e\)</span></h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(snowfall,<span class="dt">quietly=</span><span class="ot">TRUE</span>)
+Akl =<span class="st"> </span><span class="cf">function</span>(x) {
+ d =<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">dist</span>(x))
+ m =<span class="st"> </span><span class="kw">rowMeans</span>(d); M =<span class="st"> </span><span class="kw">mean</span>(d)
+ a =<span class="st"> </span><span class="kw">sweep</span>(d, <span class="dv">1</span>, m); b =<span class="st"> </span><span class="kw">sweep</span>(a, <span class="dv">2</span>, m)
+ <span class="kw">return</span>(b<span class="op">+</span>M)
+}
+dCov =<span class="st"> </span><span class="cf">function</span>(x, y) {
+ x =<span class="st"> </span><span class="kw">as.matrix</span>(x); y =<span class="st"> </span><span class="kw">as.matrix</span>(y)
+ n =<span class="st"> </span><span class="kw">nrow</span>(x); m =<span class="st"> </span><span class="kw">nrow</span>(y)
+ <span class="cf">if</span> (n <span class="op">!=</span><span class="st"> </span>m <span class="op">||</span><span class="st"> </span>n <span class="op">&lt;</span><span class="st"> </span><span class="dv">2</span>) <span class="kw">stop</span>(<span class="st">&quot;Sample sizes must agree&quot;</span>)
+ <span class="cf">if</span> (<span class="op">!</span><span class="st"> </span>(<span class="kw">all</span>(<span class="kw">is.finite</span>(<span class="kw">c</span>(x, y)))))
+ <span class="kw">stop</span>(<span class="st">&quot;Data contains missing or infinite values&quot;</span>)
+ A =<span class="st"> </span><span class="kw">Akl</span>(x); B =<span class="st"> </span><span class="kw">Akl</span>(y)
+ <span class="kw">sqrt</span>(<span class="kw">mean</span>(A <span class="op">*</span><span class="st"> </span>B))
+}
+ndCov2 =<span class="st"> </span><span class="cf">function</span>(z, ix, dims) {
+ <span class="co">#dims contains dimensions of x and y</span>
+ p =<span class="st"> </span>dims[<span class="dv">1</span>]
+ q =<span class="st"> </span>dims[<span class="dv">2</span>]
+ d =<span class="st"> </span>p <span class="op">+</span><span class="st"> </span>q
+ x =<span class="st"> </span>z[ , <span class="dv">1</span><span class="op">:</span>p] <span class="co">#leave x as is</span>
+ y =<span class="st"> </span>z[ix, <span class="op">-</span>(<span class="dv">1</span><span class="op">:</span>p)] <span class="co">#permute rows of y</span>
+ <span class="kw">return</span>(<span class="kw">nrow</span>(z) <span class="op">*</span><span class="st"> </span><span class="kw">dCov</span>(x, y)<span class="op">^</span><span class="dv">2</span>)
+}
+dcov.test=<span class="st"> </span><span class="cf">function</span>(z){
+ boot.obj =<span class="st"> </span><span class="kw">boot</span>(<span class="dt">data =</span> z, <span class="dt">statistic =</span> ndCov2, <span class="dt">R =</span> <span class="dv">999</span>,
+ <span class="dt">sim =</span> <span class="st">&quot;permutation&quot;</span>, <span class="dt">dims =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))
+ tb =<span class="st"> </span><span class="kw">c</span>(boot.obj<span class="op">$</span>t0, boot.obj<span class="op">$</span>t)
+ <span class="kw">return</span>(<span class="dt">p.cor =</span> <span class="kw">mean</span>(tb<span class="op">&gt;=</span>tb[<span class="dv">1</span>]))
+}
+run_cop1 =<span class="st"> </span><span class="cf">function</span>(n){
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){
+ x =<span class="st"> </span><span class="kw">rmvnorm</span>(n,<span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),<span class="dt">sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+ e =<span class="st"> </span><span class="kw">rmvnorm</span>(n,<span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),<span class="dt">sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+ y =<span class="st"> </span>x<span class="op">/</span><span class="dv">4</span><span class="op">+</span>e
+ z =<span class="st"> </span><span class="kw">cbind</span>(x,y)
+ p1.values[i,<span class="dv">1</span>] =<span class="st"> </span><span class="kw">dcov.test</span>(z)
+ p1.values[i,<span class="dv">2</span>] =<span class="st"> </span><span class="kw">bcov.test</span>(z[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],z[,<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>],<span class="dt">R=</span><span class="dv">999</span>,<span class="dt">seed=</span>i<span class="op">+</span><span class="dv">1</span>)<span class="op">$</span>p.value
+}
+ <span class="kw">return</span>(<span class="kw">colMeans</span>(p1.values<span class="op">&lt;</span><span class="fl">0.1</span>))
+}
+p1.values=<span class="kw">matrix</span>(<span class="dv">0</span>,<span class="dt">ncol=</span><span class="dv">2</span>,<span class="dt">nrow=</span><span class="dv">10</span>)
+<span class="kw">sfInit</span>(<span class="dt">parallel =</span> <span class="ot">TRUE</span>, <span class="dt">cpus =</span> <span class="dv">10</span>)
+<span class="kw">sfLibrary</span>(mixtools)
+<span class="kw">sfLibrary</span>(Ball)
+<span class="kw">sfLibrary</span>(boot)
+<span class="kw">sfExport</span>(<span class="st">&quot;Akl&quot;</span>,<span class="st">&quot;dCov&quot;</span>,<span class="st">&quot;ndCov2&quot;</span>,<span class="st">&quot;dcov.test&quot;</span>)
+<span class="kw">sfExport</span>(<span class="st">&quot;p1.values&quot;</span>)
+n =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">50</span>,<span class="dv">200</span>,<span class="dv">20</span>)
+result1 =<span class="st"> </span><span class="kw">sfLapply</span>(n, run_cop1)  <span class="co">#Model 1</span>
+result1=<span class="kw">matrix</span>(<span class="kw">unlist</span>(result1),<span class="dt">ncol=</span><span class="dv">2</span>,<span class="dt">byrow=</span>T)
+<span class="kw">plot</span>(n,result1[,<span class="dv">1</span>],<span class="dt">type=</span><span class="st">&quot;b&quot;</span>,<span class="dt">pch=</span><span class="dv">20</span>,<span class="dt">ylab=</span><span class="st">&quot;Power&quot;</span>,<span class="dt">main=</span><span class="st">&quot;Model 1&quot;</span>,<span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">1.1</span>))
+<span class="kw">lines</span>(n,result1[,<span class="dv">2</span>],<span class="dt">type=</span><span class="st">&quot;b&quot;</span>,<span class="dt">lty=</span><span class="dv">2</span>)
+<span class="kw">legend</span>(<span class="dv">140</span>,<span class="fl">0.3</span>,<span class="kw">c</span>(<span class="st">&quot;Distance&quot;</span>,<span class="st">&quot;Ball&quot;</span>),<span class="dt">lty=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
+t1=<span class="kw">t</span>(result1);<span class="kw">colnames</span>(t1)=<span class="kw">as.character</span>(n);<span class="kw">rownames</span>(t1)=<span class="kw">c</span>(<span class="st">&quot;Distance&quot;</span>,<span class="st">&quot;Ball&quot;</span>)
+knitr<span class="op">::</span><span class="kw">kable</span>(t1)</code></pre></div>
+</div>
+<div id="model-2-y-fracx4-cdot-e" class="section level4">
+<h4>Model 2: <span class="math inline">\(Y = \frac{X}{4} \cdot e\)</span></h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">run_cop2 =<span class="st"> </span><span class="cf">function</span>(n){
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){
+ x =<span class="st"> </span><span class="kw">rmvnorm</span>(n,<span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),<span class="dt">sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+ e =<span class="st"> </span><span class="kw">rmvnorm</span>(n,<span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),<span class="dt">sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+ y =<span class="st"> </span>x<span class="op">/</span><span class="dv">4</span><span class="op">*</span>e
+ z =<span class="st"> </span><span class="kw">cbind</span>(x,y)
+ p2.values[i,<span class="dv">1</span>] =<span class="st"> </span><span class="kw">dcov.test</span>(z)
+ p2.values[i,<span class="dv">2</span>] =<span class="st"> </span><span class="kw">bcov.test</span>(z[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],z[,<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>],<span class="dt">R=</span><span class="dv">999</span>,<span class="dt">seed=</span>i<span class="op">+</span><span class="dv">1</span>)<span class="op">$</span>p.value
+}
+ <span class="kw">return</span>(<span class="kw">colMeans</span>(p2.values<span class="op">&lt;</span><span class="fl">0.1</span>))
+}
+p2.values=<span class="kw">matrix</span>(<span class="dv">0</span>,<span class="dt">ncol=</span><span class="dv">2</span>,<span class="dt">nrow=</span><span class="dv">10</span>)
+<span class="kw">sfExport</span>(<span class="st">&quot;p2.values&quot;</span>)
+n =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">50</span>,<span class="dv">200</span>,<span class="dv">20</span>)
+result2 =<span class="st"> </span><span class="kw">sfLapply</span>(n, run_cop2)  <span class="co">#Model 2</span>
+result2=<span class="kw">matrix</span>(<span class="kw">unlist</span>(result2),<span class="dt">ncol=</span><span class="dv">2</span>,<span class="dt">byrow=</span>T)
+<span class="kw">plot</span>(n,result2[,<span class="dv">1</span>],<span class="dt">type=</span><span class="st">&quot;b&quot;</span>,<span class="dt">pch=</span><span class="dv">20</span>,<span class="dt">ylab=</span><span class="st">&quot;Power&quot;</span>,<span class="dt">main=</span><span class="st">&quot;Model 2&quot;</span>,<span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">1.1</span>))
+<span class="kw">lines</span>(n,result2[,<span class="dv">2</span>],<span class="dt">type=</span><span class="st">&quot;b&quot;</span>,<span class="dt">lty=</span><span class="dv">2</span>)
+<span class="kw">legend</span>(<span class="dv">140</span>,<span class="fl">0.3</span>,<span class="kw">c</span>(<span class="st">&quot;Distance&quot;</span>,<span class="st">&quot;Ball&quot;</span>),<span class="dt">lty=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
+t2=<span class="kw">t</span>(result2);<span class="kw">colnames</span>(t2)=<span class="kw">as.character</span>(n);<span class="kw">rownames</span>(t2)=<span class="kw">c</span>(<span class="st">&quot;Distance&quot;</span>,<span class="st">&quot;Ball&quot;</span>)
+knitr<span class="op">::</span><span class="kw">kable</span>(t2)</code></pre></div>
+<p>From the curves and the tables, we can see that in Model 1, distance correlation test has larger power, but in Model 2, Ball covariance test has larger power.</p>
 </div>
 </div>
 <div id="homework-9-11.29" class="section level3">
@@ -1617,13 +1624,9 @@ boot_i =<span class="st"> </span><span class="cf">function</span>(i){
 }
  <span class="kw">as.numeric</span>(boot<span class="op">::</span><span class="kw">boot</span>(mtcars,r_adj,<span class="dv">1</span>)<span class="op">$</span>t)
 }
-<span class="kw">system.time</span>(<span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>,boot_i))</code></pre></div>
-<pre><code>#    user  system elapsed 
-#    1.97    0.02    2.18</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">mcsapply</span>(cluster,<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>,boot_i))</code></pre></div>
-<pre><code>#    user  system elapsed 
-#    0.00    0.00    0.61</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#In fact, in Windows, we have function *parSapply* directly.</span></code></pre></div>
+<span class="kw">system.time</span>(<span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>,boot_i))
+<span class="kw">system.time</span>(<span class="kw">mcsapply</span>(cluster,<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>,boot_i))
+<span class="co">#In fact, in Windows, we have function *parSapply* directly.</span></code></pre></div>
 <p>We can see that using parallelisation, the system time for running bootstrap decrease sharply. I can implement mcvapply, it is just the same as mcsapply, just with additional argument specifying the output type.</p>
 </div>
 </div>
@@ -1714,8 +1717,8 @@ QR =<span class="st"> </span><span class="kw">apply</span>(Mc, <span class="dv">
 time =<span class="st"> </span><span class="kw">microbenchmark</span>(<span class="dt">MHC=</span><span class="kw">randomMHC</span>(sigma,x0,N),<span class="dt">MHR=</span><span class="kw">random.M</span>(sigma,x0,N))
 <span class="kw">summary</span>(time)[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">6</span>)]</code></pre></div>
 <pre><code>#   expr      lq  median       uq
-# 1  MHC  453.75   494.2   689.05
-# 2  MHR 8369.40 10319.7 12256.40</code></pre>
+# 1  MHC  441.35  454.15   547.45
+# 2  MHR 7011.70 8292.95 11421.35</code></pre>
 <p>We can see that using Cpp function, the running time is much shorter than using R function, almost 1/15 of before. Therefore, using Rcpp method can greatly shorter the consuming time for calculations.</p>
 </div>
 </div>

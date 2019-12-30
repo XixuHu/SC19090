@@ -469,6 +469,145 @@ paste("Magnetic =",coef[1],coef[2],"*Chemical +" ,coef[3],"*Chemical^2")
 
 
 ## -----------------------------------------------------------------------------
+library(boot,quietly = TRUE)
+count5num <- function(z,ix,n1) {
+ z = z[ix]
+ x = z[1:n1]
+ y = z[-(1:n1)]
+ X <- x - mean(x)
+ Y <- y - mean(y)
+ outx <- sum(X > max(Y)) + sum(X < min(Y))
+ outy <- sum(Y > max(X)) + sum(Y < min(X))
+ # return the number of extreme points
+ return(max(c(outx, outy)))
+}
+count5_test =function(y,n1){ #Permutation version
+ boot.obj = boot(data = y, statistic = count5num
+ ,R = 2000,sim = "permutation",n1=n1)
+ tb = c(boot.obj$t0, boot.obj$t)
+ p.value = mean(tb>=tb[1]) #larger t favors alternative
+ return(as.integer(p.value<0.05))
+}
+count5test = function(x, y) {
+ X = x - mean(x)
+ Y = y - mean(y)
+ outx = sum(X > max(Y)) + sum(X < min(Y))
+ outy = sum(Y > max(X)) + sum(Y < min(X))
+ # return 1 (reject) or 0 (do not reject H0)
+ return(as.integer(max(c(outx, outy)) > 5))
+}
+n1=20;n2=30;m=500
+a1 = mean(replicate(m, expr={ #Count 5 criterion
+ x = rnorm(n1);y <- rnorm(n2)
+ x = x - mean(x) #centered by sample mean
+ y = y - mean(y)
+ count5test(x, y)
+}))
+a2 = mean(replicate(m, expr={ #Permutation test
+ x1 = rnorm(n1);x2 = rnorm(n2)
+ y=c(x1,x2)
+ count5_test(y,n1)
+}))
+round(c(c5_t1e=a1,pt_t1e=a2),3)
+
+## -----------------------------------------------------------------------------
+n2=50;m=500
+a1 = mean(replicate(m, expr={ #Count 5 criterion
+ x = rnorm(n1);y <- rnorm(n2)
+ x = x - mean(x) #centered by sample mean
+ y = y - mean(y)
+ count5test(x, y)
+}))
+a2 = mean(replicate(m, expr={ #Permutation test
+ x1 = rnorm(n1);x2 = rnorm(n2)
+ y=c(x1,x2)
+ count5_test(y,n1)
+}))
+round(c(c5_t1e=a1,pt_t1e=a2),3)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  library(snowfall,quietly=TRUE)
+#  Akl = function(x) {
+#   d = as.matrix(dist(x))
+#   m = rowMeans(d); M = mean(d)
+#   a = sweep(d, 1, m); b = sweep(a, 2, m)
+#   return(b+M)
+#  }
+#  dCov = function(x, y) {
+#   x = as.matrix(x); y = as.matrix(y)
+#   n = nrow(x); m = nrow(y)
+#   if (n != m || n < 2) stop("Sample sizes must agree")
+#   if (! (all(is.finite(c(x, y)))))
+#   stop("Data contains missing or infinite values")
+#   A = Akl(x); B = Akl(y)
+#   sqrt(mean(A * B))
+#  }
+#  ndCov2 = function(z, ix, dims) {
+#   #dims contains dimensions of x and y
+#   p = dims[1]
+#   q = dims[2]
+#   d = p + q
+#   x = z[ , 1:p] #leave x as is
+#   y = z[ix, -(1:p)] #permute rows of y
+#   return(nrow(z) * dCov(x, y)^2)
+#  }
+#  dcov.test= function(z){
+#   boot.obj = boot(data = z, statistic = ndCov2, R = 999,
+#   sim = "permutation", dims = c(2, 2))
+#   tb = c(boot.obj$t0, boot.obj$t)
+#   return(p.cor = mean(tb>=tb[1]))
+#  }
+#  run_cop1 = function(n){
+#  for (i in 1:10){
+#   x = rmvnorm(n,mu=c(0,0),sigma=diag(1,2))
+#   e = rmvnorm(n,mu=c(0,0),sigma=diag(1,2))
+#   y = x/4+e
+#   z = cbind(x,y)
+#   p1.values[i,1] = dcov.test(z)
+#   p1.values[i,2] = bcov.test(z[,1:2],z[,3:4],R=999,seed=i+1)$p.value
+#  }
+#   return(colMeans(p1.values<0.1))
+#  }
+#  p1.values=matrix(0,ncol=2,nrow=10)
+#  sfInit(parallel = TRUE, cpus = 10)
+#  sfLibrary(mixtools)
+#  sfLibrary(Ball)
+#  sfLibrary(boot)
+#  sfExport("Akl","dCov","ndCov2","dcov.test")
+#  sfExport("p1.values")
+#  n = seq(50,200,20)
+#  result1 = sfLapply(n, run_cop1)  #Model 1
+#  result1=matrix(unlist(result1),ncol=2,byrow=T)
+#  plot(n,result1[,1],type="b",pch=20,ylab="Power",main="Model 1",ylim=c(0,1.1))
+#  lines(n,result1[,2],type="b",lty=2)
+#  legend(140,0.3,c("Distance","Ball"),lty=1:2)
+#  t1=t(result1);colnames(t1)=as.character(n);rownames(t1)=c("Distance","Ball")
+#  knitr::kable(t1)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  run_cop2 = function(n){
+#  for (i in 1:10){
+#   x = rmvnorm(n,mu=c(0,0),sigma=diag(1,2))
+#   e = rmvnorm(n,mu=c(0,0),sigma=diag(1,2))
+#   y = x/4*e
+#   z = cbind(x,y)
+#   p2.values[i,1] = dcov.test(z)
+#   p2.values[i,2] = bcov.test(z[,1:2],z[,3:4],R=999,seed=i+1)$p.value
+#  }
+#   return(colMeans(p2.values<0.1))
+#  }
+#  p2.values=matrix(0,ncol=2,nrow=10)
+#  sfExport("p2.values")
+#  n = seq(50,200,20)
+#  result2 = sfLapply(n, run_cop2)  #Model 2
+#  result2=matrix(unlist(result2),ncol=2,byrow=T)
+#  plot(n,result2[,1],type="b",pch=20,ylab="Power",main="Model 2",ylim=c(0,1.1))
+#  lines(n,result2[,2],type="b",lty=2)
+#  legend(140,0.3,c("Distance","Ball"),lty=1:2)
+#  t2=t(result2);colnames(t2)=as.character(n);rownames(t2)=c("Distance","Ball")
+#  knitr::kable(t2)
+
+## -----------------------------------------------------------------------------
 set.seed(8888)
 f = function(x) {
   return(exp(-abs(x)))
@@ -642,26 +781,26 @@ trials=replicate(100,t.test(rpois(10, 10),rpois(7, 10)),simplify = FALSE)
 sapply(trials,function(mod){mod$p.value})
 sapply(trials, "[[", "p.value") #No anonymous function
 
-## -----------------------------------------------------------------------------
-library(parallel)
-cores = detectCores()
-cluster = makePSOCKcluster(cores)
-mcsapply = function(cluster,X,FUN,...){
- res=parLapply(cluster,X,FUN,...) #Use parLapply in Windows
- simplify2array(res)
-}
-#Example of Parallelisation
-boot_i = function(i){
- r_adj = function(x,id) {
-  x = x[id,]     #bootstrap sample
-  res = lm(mpg~wt+disp,data=x)
-  summary(res)$adj.r.squared
-}
- as.numeric(boot::boot(mtcars,r_adj,1)$t)
-}
-system.time(sapply(1:500,boot_i))
-system.time(mcsapply(cluster,1:500,boot_i))
-#In fact, in Windows, we have function *parSapply* directly.
+## ----eval=FALSE---------------------------------------------------------------
+#  library(parallel)
+#  cores = detectCores()
+#  cluster = makePSOCKcluster(cores)
+#  mcsapply = function(cluster,X,FUN,...){
+#   res=parLapply(cluster,X,FUN,...) #Use parLapply in Windows
+#   simplify2array(res)
+#  }
+#  #Example of Parallelisation
+#  boot_i = function(i){
+#   r_adj = function(x,id) {
+#    x = x[id,]     #bootstrap sample
+#    res = lm(mpg~wt+disp,data=x)
+#    summary(res)$adj.r.squared
+#  }
+#   as.numeric(boot::boot(mtcars,r_adj,1)$t)
+#  }
+#  system.time(sapply(1:500,boot_i))
+#  system.time(mcsapply(cluster,1:500,boot_i))
+#  #In fact, in Windows, we have function *parSapply* directly.
 
 ## -----------------------------------------------------------------------------
 library(Rcpp)
