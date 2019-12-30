@@ -2,7 +2,7 @@
 % Please edit documentation in R/ci_comp.R
 \name{CI_ELR}
 \alias{CI_ELR}
-\title{A function that uses *uniroot* to solve for the ($1-\alpha$) confidence interval of sample mean
+\title{A function that uses uniroot to solve for the (1-alpha) confidence interval of sample mean
 by the method of empirical likelihood}
 \usage{
 CI_ELR(y, alpha, ub)
@@ -15,16 +15,16 @@ CI_ELR(y, alpha, ub)
 \item{ub}{upper bound for solving for the root}
 }
 \value{
-a ($1-\alpha$) confidence interval by the method of empirical likelihood
+a (1-alpha) confidence interval by the method of empirical likelihood
 }
 \description{
-A function that uses *uniroot* to solve for the ($1-\alpha$) confidence interval of sample mean
+A function that uses uniroot to solve for the (1-alpha) confidence interval of sample mean
 by the method of empirical likelihood
 }
 \details{
-For empirical likelihood method, the ($1-\alpha$) CI for $\mu$ is
-$$\{\mu|\sum_{i=1}^{n}log(np_i(\mu))>-0.5\chi^2_{1-\alpha}(1)\}$$
-Noticing that $\mu$ doesn't have explicit formula to calculate, 
+For empirical likelihood method, the (1-alpha) CI for mu is
+{mu|sum(log(np[i](mu)),i==1,n)>-0.5 chi[1-alpha]^2*(1)}
+Noticing that mu doesn't have explicit formula to calculate, 
 I solved the equation numerically.
 }
 \examples{

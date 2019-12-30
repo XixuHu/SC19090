@@ -2,7 +2,7 @@
 % Please edit documentation in R/ci_comp.R
 \name{CI_NDM}
 \alias{CI_NDM}
-\title{A function that computes the the ($1-\alpha$) confidence interval of sample mean
+\title{A function that computes the the (1-alpha) confidence interval of sample mean
 by the method of nonparametric delta method}
 \usage{
 CI_NDM(y, alpha)
@@ -13,15 +13,16 @@ CI_NDM(y, alpha)
 \item{alpha}{significance level}
 }
 \value{
-a ($1-\alpha$) confidence interval by the method of nonparametric delta method
+a (1-alpha) confidence interval by the method of nonparametric delta method
 }
 \description{
-A function that computes the the ($1-\alpha$) confidence interval of sample mean
+A function that computes the the (1-alpha) confidence interval of sample mean
 by the method of nonparametric delta method
 }
 \details{
-For nonparametric delta method of mean value, $\hat{\tau}^2=\frac{1}{n}\sum_{i=1}^{n}(Y_i-\bar{Y})^2$
- $$[\bar{Y}-\frac{z_{1-\frac{\alpha}{2}}*\tau}{\sqrt{n}},\bar{Y}+-\frac{z_{1-\frac{\alpha}{2}}*\tau}{\sqrt{n}}]$$
+For nonparametric delta method of mean value, hat(tau)^2=frac(1,n)sum((Y[i]-bar{Y})^2,i==1,n)
+ group('[',list(bar(Y)-frac(z[1-frac(alpha,2)]%*%tau,sqrt(n)),bar(Y)+frac(z[1-frac(alpha,2)]%*%tau,sqrt(n))
+ ),']')
 }
 \examples{
 \dontrun{

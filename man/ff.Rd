@@ -2,7 +2,7 @@
 % Please edit documentation in R/ex.R
 \name{ff}
 \alias{ff}
-\title{Compute $\frac{2\Gamma(\frac{k+1}{2})}{\sqrt{\pi k} \Gamma(\frac{k}{2})}\int_0^{c_{k}}(1+\frac{u^2}{k})^{-(k+1)/2}du$}
+\title{Compute frac(2*Gamma(frac(k+1,2)),sqrt(pi*k)*Gamma(frac(k,2))*integral((1+frac(u^2,k))^{-(k+1)/2}*du,0,c[k])}
 \usage{
 ff(k, a)
 }
@@ -15,5 +15,5 @@ ff(k, a)
 the numerical integration
 }
 \description{
-$c_k=\sqrt{\frac{a^2k}{k+1-a^2}}$
+c[k]=sqrt(frac(a^2*k,k+1-a^2))
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ex.R
 \name{pwr_beta}
 \alias{pwr_beta}
-\title{The graph of the power of the skewness test of symmetric Beta$(\alpha, \alpha)$ distribution}
+\title{The graph of the power of the skewness test of symmetric Beta(alpha, alpha) distribution}
 \usage{
 pwr_beta(a)
 }
@@ -13,7 +13,7 @@ pwr_beta(a)
 a graph of the power of the skewness test
 }
 \description{
-The graph of the power of the skewness test of symmetric Beta$(\alpha, \alpha)$ distribution
+The graph of the power of the skewness test of symmetric Beta(alpha, alpha) distribution
 }
 \examples{
 \dontrun{

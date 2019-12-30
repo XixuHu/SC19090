@@ -7,6 +7,18 @@ double f(double x) {
 	return exp(-fabs(x));
 }
 
+//' @title A Metropolis-Hastings sampler using Rcpp
+//' @description A Metropolis-Hastings sampler using Rcpp
+//' @param sigma the standard deviation of the sample-generating normal distribution
+//' @param x0 initial values
+//' @param N length of Markov Chain
+//' @return A Markov China of generating samples
+//' @useDynLib SC19090
+//' @examples
+//' \dontrun{
+//' R= randomMHC(2,10,2000)
+//' }
+//' @export
 //[[Rcpp::export]]
 List randomMHC (double sigma, double x0, int N) {
 	NumericVector x(N);

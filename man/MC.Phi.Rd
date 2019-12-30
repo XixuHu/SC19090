@@ -12,10 +12,10 @@ MC.Phi(R = 10000, anti = TRUE)
 \item{anti}{use antithetic variables or not}
 }
 \value{
-The numerical estimation of $\int_{0}^{1}\frac{e^{-x}}{1+x^2}dx$
+The numerical estimation of integral(frac(e^{-x},1+x^2)*dx,0,1)
 }
 \description{
-This function is defined to estimate $\int_{0}^{1}\frac{e^{-x}}{1+x^2}dx$
+This function is defined to estimate integral(frac(e^{-x},1+x^2)*dx,0,1)
 and test the effect of antithetic variables in variance reduction.
 }
 \examples{

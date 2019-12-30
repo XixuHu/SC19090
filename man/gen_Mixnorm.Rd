@@ -14,7 +14,7 @@ A histogram of the sample with density superimposed
 }
 \description{
 Generate a random sample of size 1000 from a normal location mixture. 
-$$X_1\sim N(0,1),X_2\sim N(3,1),Z=p_1X_1+(1-p_1)X_2$$
+X[1]%~% N(0,1),X[2]%~% N(3,1),Z=p[1]*X[1]+(1-p[1])*X[2]
 Graph the histogram of the sample with density superimposed
 }
 \examples{

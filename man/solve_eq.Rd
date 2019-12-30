@@ -2,8 +2,7 @@
 % Please edit documentation in R/ex.R
 \name{solve_eq}
 \alias{solve_eq}
-\title{Solve the equation of $\frac{2\Gamma(\frac{k}{2})}{\sqrt{\pi (k-1)} \Gamma(\frac{k-1}{2})}\int_0^{c_{k-1}}(1+\frac{u^2}{k-1})^{-k/2}du$
-$=\frac{2\Gamma(\frac{k+1}{2})}{\sqrt{\pi k} \Gamma(\frac{k}{2})}\int_0^{c_{k}}(1+\frac{u^2}{k})^{-(k+1)/2}du$}
+\title{Solve the equation ff(k,a)=ff(k-1,a)}
 \usage{
 solve_eq(k)
 }
@@ -14,8 +13,7 @@ solve_eq(k)
 the root of the equation
 }
 \description{
-Solve the equation of $\frac{2\Gamma(\frac{k}{2})}{\sqrt{\pi (k-1)} \Gamma(\frac{k-1}{2})}\int_0^{c_{k-1}}(1+\frac{u^2}{k-1})^{-k/2}du$
-$=\frac{2\Gamma(\frac{k+1}{2})}{\sqrt{\pi k} \Gamma(\frac{k}{2})}\int_0^{c_{k}}(1+\frac{u^2}{k})^{-(k+1)/2}du$
+Solve the equation ff(k,a)=ff(k-1,a)
 }
 \examples{
 \dontrun{

@@ -19,10 +19,10 @@ Extended jonckheere function that can handle data with ties.
 }
 \details{
 For Jonkheere-Terpstra test with ties
-$$W_{ij}=\#(X_{ik}<X_{jl},k=1,2,...,n_i,l=1,2,...,n_j)+\frac{1}{2}\#(X_{ik}=X_{jl},k=1,2,...,n_i,l=1,2,...,n_j)$$
-$$J=\sum_{i<J}W_{ij}$$
-$$\frac{J-E_{H_0}(J)}{\sqrt{var_{H_0}(J)}}$$
-$E_{H_0}(J)=\frac{N^2-\sum_{i=1}^{k}n_i^2}{4}$
+W[ij]=\#(X[ik]<X[jl],k=1,2,...,n[i],l=1,2,...,n[j])+frac(1,2)\#(X[ik]=X[jl],k=1,2,...,n[i],l=1,2,...,n[j])
+J=sum(W[ij],i<j)
+frac(J-E[H[0]](J),sqrt(var[H[0]](J)))
+E[H[0]](J)=frac(N^2-sum(n[i]^2,i==1,k),4)
 }
 \examples{
 \dontrun{

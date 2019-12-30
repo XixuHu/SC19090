@@ -5,6 +5,18 @@ f <- function(x) {
     .Call('_SC19090_f', PACKAGE = 'SC19090', x)
 }
 
+#' @title A Metropolis-Hastings sampler using Rcpp
+#' @description A Metropolis-Hastings sampler using Rcpp
+#' @param sigma the standard deviation of the sample-generating normal distribution
+#' @param x0 initial values
+#' @param N length of Markov Chain
+#' @return A Markov China of generating samples
+#' @useDynLib SC19090
+#' @examples
+#' \dontrun{
+#' R= randomMHC(2,10,2000)
+#' }
+#' @export
 randomMHC <- function(sigma, x0, N) {
     .Call('_SC19090_randomMHC', PACKAGE = 'SC19090', sigma, x0, N)
 }

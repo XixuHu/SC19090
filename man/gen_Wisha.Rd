@@ -2,7 +2,7 @@
 % Please edit documentation in R/ex.R
 \name{gen_Wisha}
 \alias{gen_Wisha}
-\title{Generate random samples from Wishart distribution $W_d(\Sigma,n)$}
+\title{Generate random samples from Wishart distribution W[d](Sigma,n)}
 \usage{
 gen_Wisha(d, n, Sigma)
 }
@@ -14,18 +14,18 @@ gen_Wisha(d, n, Sigma)
 \item{Sigma}{scale matrix}
 }
 \value{
-The generated samples from $W_d(\Sigma,n)$
+The generated samples from W[d](Sigma,n)
 }
 \description{
 This function generate random samples from Wishart distribution based on Bartlett’s decomposition.
 }
 \details{
-Let T=($T_{ij}$) be a lower triangular $d\times d$ random matrix with independent entries satisfying
--$T_{ij}\sim N(0,1),i>j,i.i.d$
--$T_{ii}\sim \sqrt{\chi^2(n-i+1)},i=1,...,d$
-Then the matrix $A=TT^{T}$ has a $W_d(I_d,n)$ distribution
-Obtain the Choleski factorization $\Sigma=LL^{T}$,where L is a lower triangular
-Then $LAL^{T}\sim W_d(\Sigma,n)$
+Let T=(T[ij]) be a lower triangular d%*%d random matrix with independent entries satisfying
+T[ij]%~% N(0,1),i>j,i.i.d
+T[ii]%~% sqrt(chi^2*(n-i+1)),i=1,...,d
+Then the matrix A=TT^T has a W[d](I[d],n) distribution
+Obtain the Choleski factorization Sigma=LL^T,where L is a lower triangular
+Then LAL^T %~% W[d](Sigma,n)
 }
 \examples{
 \dontrun{

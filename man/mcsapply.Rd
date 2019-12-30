@@ -7,7 +7,7 @@
 mcsapply(cluster, X, FUN, ...)
 }
 \arguments{
-\item{cluster}{}
+\item{cluster}{cluster}
 
 \item{X}{object of the function}
 

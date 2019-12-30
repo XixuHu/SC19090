@@ -1,6 +1,6 @@
 #' @title Histogram of mixture of normal distribution 
 #' @description Generate a random sample of size 1000 from a normal location mixture. 
-#' $$X_1\sim N(0,1),X_2\sim N(3,1),Z=p_1X_1+(1-p_1)X_2$$
+#' X[1]%~% N(0,1),X[2]%~% N(3,1),Z=p[1]*X[1]+(1-p[1])*X[2]
 #' Graph the histogram of the sample with density superimposed
 #' @param p1 The proportion of mixture
 #'
@@ -22,19 +22,19 @@ gen_Mixnorm = function(p1){
  lines(y,p1*dnorm(y,0,1)+(1-p1)*dnorm(y,3,1),col=cbPalette[sample(seq(1:8),1,replace=F)],lwd=2)
 }
 
-#' @title Generate random samples from Wishart distribution $W_d(\Sigma,n)$
+#' @title Generate random samples from Wishart distribution W[d](Sigma,n)
 #'
 #' @param d the dimension of the square matrix
 #' @param n degrees of freedom
 #' @param Sigma scale matrix
 #' @description This function generate random samples from Wishart distribution based on Bartlett’s decomposition.
-#' @details Let T=($T_{ij}$) be a lower triangular $d\times d$ random matrix with independent entries satisfying
-#' -$T_{ij}\sim N(0,1),i>j,i.i.d$
-#' -$T_{ii}\sim \sqrt{\chi^2(n-i+1)},i=1,...,d$
-#' Then the matrix $A=TT^{T}$ has a $W_d(I_d,n)$ distribution
-#' Obtain the Choleski factorization $\Sigma=LL^{T}$,where L is a lower triangular
-#' Then $LAL^{T}\sim W_d(\Sigma,n)$
-#' @return The generated samples from $W_d(\Sigma,n)$
+#' @details Let T=(T[ij]) be a lower triangular d%*%d random matrix with independent entries satisfying
+#' T[ij]%~% N(0,1),i>j,i.i.d
+#' T[ii]%~% sqrt(chi^2*(n-i+1)),i=1,...,d
+#' Then the matrix A=TT^T has a W[d](I[d],n) distribution
+#' Obtain the Choleski factorization Sigma=LL^T,where L is a lower triangular
+#' Then LAL^T %~% W[d](Sigma,n)
+#' @return The generated samples from W[d](Sigma,n)
 #' @export
 #'
 #' @examples
@@ -57,12 +57,12 @@ gen_Wisha = function (d,n,Sigma){
 
 
 #' @title Monte Carlo integration with antithetic variables
-#' @description This function is defined to estimate $\int_{0}^{1}\frac{e^{-x}}{1+x^2}dx$
+#' @description This function is defined to estimate integral(frac(e^{-x},1+x^2)*dx,0,1)
 #' and test the effect of antithetic variables in variance reduction.
 #' @param R number of generated samples to estimate the integration
 #' @param anti use antithetic variables or not
 #'
-#' @return The numerical estimation of $\int_{0}^{1}\frac{e^{-x}}{1+x^2}dx$
+#' @return The numerical estimation of integral(frac(e^{-x},1+x^2)*dx,0,1)
 #' @export
 #'
 #' @examples
@@ -103,9 +103,9 @@ sk = function(x) {
 }
 
 #' @title Calculate the standard error of q sample quantile using exact variance formula of skewness
-#' @details  The variance of q sample quantile of skewness is $Var(\hat{x_q})=\frac{q(1-q)}{nf^2(x)}$
+#' @details  The variance of q sample quantile of skewness is Var(hat(x[q]))=frac(q(1-q),nf^2*(x))
 #' where f is the density of the sampled distribution. 
-#' Using the normal approximation for the density, the skewness is asymptotically normal with mean 0 and variance $\frac{6(n-2)}{(n+1)(n+3)}$
+#' Using the normal approximation for the density, the skewness is asymptotically normal with mean 0 and variance frac(6(n-2),(n+1)(n+3))
 #' @param x the quantiles of skewness coefficient
 #' @param q quantiles
 #' @param n number of samples
@@ -131,7 +131,7 @@ sd_sk = function(x,q,n){
 }
 
 
-#' @title The graph of the power of the skewness test of symmetric Beta$(\alpha, \alpha)$ distribution
+#' @title The graph of the power of the skewness test of symmetric Beta(alpha, alpha) distribution
 #'
 #' @param a the parameter for symmetric Beta distribution
 #'
@@ -305,8 +305,8 @@ random.M = function(sigma, x0, N){
 
 
 
-#' @title Compute $\frac{2\Gamma(\frac{k+1}{2})}{\sqrt{\pi k} \Gamma(\frac{k}{2})}\int_0^{c_{k}}(1+\frac{u^2}{k})^{-(k+1)/2}du$
-#' @description $c_k=\sqrt{\frac{a^2k}{k+1-a^2}}$
+#' @title Compute frac(2*Gamma(frac(k+1,2)),sqrt(pi*k)*Gamma(frac(k,2))*integral((1+frac(u^2,k))^{-(k+1)/2}*du,0,c[k])
+#' @description c[k]=sqrt(frac(a^2*k,k+1-a^2))
 #' @param k integer
 #' @param a real number
 #'
@@ -320,8 +320,7 @@ ff = function(k,a){
  mul*int
 }
 
-#' @title Solve the equation of $\frac{2\Gamma(\frac{k}{2})}{\sqrt{\pi (k-1)} \Gamma(\frac{k-1}{2})}\int_0^{c_{k-1}}(1+\frac{u^2}{k-1})^{-k/2}du$
-#' $=\frac{2\Gamma(\frac{k+1}{2})}{\sqrt{\pi k} \Gamma(\frac{k}{2})}\int_0^{c_{k}}(1+\frac{u^2}{k})^{-(k+1)/2}du$
+#' @title Solve the equation ff(k,a)=ff(k-1,a)
 #'
 #' @param k integer
 #'
@@ -346,7 +345,7 @@ solve_eq = function(k){
 
 #' @title A multicore version of sapply() (For Windows only)
 #'
-#' @param cluster 
+#' @param cluster cluster
 #' @param X object of the function
 #' @param FUN function
 #' @param ... 

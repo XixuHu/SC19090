@@ -20,9 +20,9 @@ the standard error of q sample quantile of skewness coefficient
 Calculate the standard error of q sample quantile using exact variance formula of skewness
 }
 \details{
-The variance of q sample quantile of skewness is $Var(\hat{x_q})=\frac{q(1-q)}{nf^2(x)}$
+The variance of q sample quantile of skewness is Var(hat(x[q]))=frac(q(1-q),nf^2*(x))
 where f is the density of the sampled distribution. 
-Using the normal approximation for the density, the skewness is asymptotically normal with mean 0 and variance $\frac{6(n-2)}{(n+1)(n+3)}$
+Using the normal approximation for the density, the skewness is asymptotically normal with mean 0 and variance frac(6(n-2),(n+1)(n+3))
 }
 \examples{
 \dontrun{

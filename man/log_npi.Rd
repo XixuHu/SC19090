@@ -12,12 +12,12 @@ log_npi(x, mu)
 \item{mu}{theoretical mean}
 }
 \value{
-the value of $\sum_{i=1}^{n}log(np_i(\mu))$
+the value of sum(log(np[i](mu)),i==1,n)
 }
 \description{
 A function used to calculate the log-likelihood of sample mean
 }
 \details{
-$$When\ n\ is\ large,\ np_i\approx \frac{1}{1+\frac{(\bar{y}-\mu)(y_i-\mu)}{S(\mu)}}$$
-where$S(\mu)=\frac{1}{n}\sum_{i=1}^{n}(y_i-\mu)^2$
+When n is large, np[i] %~~% frac(1,1+frac((bar(y)-mu)(y[i]-mu),S(mu))$$
+where S(mu)=frac(1,n) sum((y[i]-mu)^2,i==1,n)
 }

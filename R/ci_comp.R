@@ -2,9 +2,9 @@
 #'
 #' @param x samples
 #' @param mu theoretical mean
-#' @details $$When\ n\ is\ large,\ np_i\approx \frac{1}{1+\frac{(\bar{y}-\mu)(y_i-\mu)}{S(\mu)}}$$
-#' where$S(\mu)=\frac{1}{n}\sum_{i=1}^{n}(y_i-\mu)^2$
-#' @return the value of $\sum_{i=1}^{n}log(np_i(\mu))$
+#' @details When n is large, np[i] %~~% frac(1,1+frac((bar(y)-mu)(y[i]-mu),S(mu))$$
+#' where S(mu)=frac(1,n) sum((y[i]-mu)^2,i==1,n)
+#' @return the value of sum(log(np[i](mu)),i==1,n)
 #' @export
 log_npi = function(x,mu){
  n=length(x)
@@ -18,17 +18,17 @@ log_npi = function(x,mu){
  S
 }
 
-#' @title A function that uses *uniroot* to solve for the ($1-\alpha$) confidence interval of sample mean
+#' @title A function that uses uniroot to solve for the (1-alpha) confidence interval of sample mean
 #' by the method of empirical likelihood
 #'
 #' @param y samples
 #' @param alpha significance level
 #' @param ub upper bound for solving for the root 
 #'
-#' @return a ($1-\alpha$) confidence interval by the method of empirical likelihood
-#' @details For empirical likelihood method, the ($1-\alpha$) CI for $\mu$ is
-#' $$\{\mu|\sum_{i=1}^{n}log(np_i(\mu))>-0.5\chi^2_{1-\alpha}(1)\}$$
-#' Noticing that $\mu$ doesn't have explicit formula to calculate, 
+#' @return a (1-alpha) confidence interval by the method of empirical likelihood
+#' @details For empirical likelihood method, the (1-alpha) CI for mu is
+#' {mu|sum(log(np[i](mu)),i==1,n)>-0.5 chi[1-alpha]^2*(1)}
+#' Noticing that mu doesn't have explicit formula to calculate, 
 #' I solved the equation numerically.
 #' @export
 #'
@@ -54,15 +54,16 @@ CI_ELR = function(y,alpha,ub){
  return(round(c(root1,root2),4))
 }
 
-#' @title A function that computes the the ($1-\alpha$) confidence interval of sample mean
+#' @title A function that computes the the (1-alpha) confidence interval of sample mean
 #' by the method of nonparametric delta method
 #'
 #' @param y samples
 #' @param alpha significance level
 #'
-#' @return a ($1-\alpha$) confidence interval by the method of nonparametric delta method
-#' @details For nonparametric delta method of mean value, $\hat{\tau}^2=\frac{1}{n}\sum_{i=1}^{n}(Y_i-\bar{Y})^2$
-#'  $$[\bar{Y}-\frac{z_{1-\frac{\alpha}{2}}*\tau}{\sqrt{n}},\bar{Y}+-\frac{z_{1-\frac{\alpha}{2}}*\tau}{\sqrt{n}}]$$
+#' @return a (1-alpha) confidence interval by the method of nonparametric delta method
+#' @details For nonparametric delta method of mean value, hat(tau)^2=frac(1,n)sum((Y[i]-bar{Y})^2,i==1,n)
+#'  group('[',list(bar(Y)-frac(z[1-frac(alpha,2)]%*%tau,sqrt(n)),bar(Y)+frac(z[1-frac(alpha,2)]%*%tau,sqrt(n))
+#'  ),']')
 #' @export
 #'
 #' @examples
