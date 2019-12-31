@@ -13,9 +13,11 @@ mcsapply(cluster, X, FUN, ...)
 
 \item{FUN}{function}
 
-\item{...}{other things}
+\item{...}{}
 }
+\value{
 
+}
 \description{
 A multicore version of sapply() (For Windows only)
 }
